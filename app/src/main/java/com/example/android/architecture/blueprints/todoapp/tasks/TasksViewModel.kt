@@ -16,6 +16,9 @@
 
 package com.example.android.architecture.blueprints.todoapp.tasks
 
+import android.content.Intent
+import android.util.Log
+import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -40,6 +43,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 /**
  * UiState for the task list screen.
@@ -115,6 +119,8 @@ class TasksViewModel @Inject constructor(
         if (completed) {
             taskRepository.completeTask(task.id)
             showSnackbarMessage(R.string.task_marked_complete)
+            Timber.tag("onCheckedChange").i("viewModel")
+
         } else {
             taskRepository.activateTask(task.id)
             showSnackbarMessage(R.string.task_marked_active)

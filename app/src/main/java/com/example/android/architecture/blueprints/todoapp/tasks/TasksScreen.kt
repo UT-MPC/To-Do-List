@@ -16,6 +16,7 @@
 
 package com.example.android.architecture.blueprints.todoapp.tasks
 
+import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -165,7 +166,10 @@ private fun TasksContent(
                     TaskItem(
                         task = task,
                         onTaskClick = onTaskClick,
-                        onCheckedChange = { onTaskCheckedChange(task, it) }
+                        onCheckedChange = {
+                            onTaskCheckedChange(task, it)
+                            Log.i("onCheckedChange", "checked")
+                        }
                     )
                 }
             }
