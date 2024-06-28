@@ -19,6 +19,8 @@ package com.example.android.architecture.blueprints.todoapp.tasks
 import android.content.Intent
 import android.util.Log
 import androidx.core.content.ContextCompat.startActivity
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -63,6 +65,9 @@ class TasksViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    private val _data = MutableLiveData<Int>()  // Use LiveData in ViewModel to hold the data you want to monitor for changes. LiveData automatically notifies observers when the data changes.
+    val data: LiveData<Int> get() = _data
 
     private val _savedFilterType =
         savedStateHandle.getStateFlow(TASKS_FILTER_SAVED_STATE_KEY, ALL_TASKS)
@@ -120,7 +125,8 @@ class TasksViewModel @Inject constructor(
             taskRepository.completeTask(task.id)
             showSnackbarMessage(R.string.task_marked_complete)
             Timber.tag("onCheckedChange").i("viewModel")
-
+            _data.value = 1
+            Timber.tag("onCheckedChange").i("liveData is ${_data.value}")
         } else {
             taskRepository.activateTask(task.id)
             showSnackbarMessage(R.string.task_marked_active)
