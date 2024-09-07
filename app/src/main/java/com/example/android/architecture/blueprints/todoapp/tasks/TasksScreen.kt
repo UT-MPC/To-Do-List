@@ -16,6 +16,7 @@
 
 package com.example.android.architecture.blueprints.todoapp.tasks
 
+import android.content.Context
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
@@ -67,6 +68,7 @@ import com.google.accompanist.appcompattheme.AppCompatTheme
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun TasksScreen(
+    context: Context,
     @StringRes userMessage: Int,
     onAddTask: () -> Unit,
     onTaskClick: (Task) -> Unit,
@@ -76,6 +78,7 @@ fun TasksScreen(
     viewModel: TasksViewModel = hiltViewModel(),
     scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
+    viewModel.setApplicationContext(context)
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
