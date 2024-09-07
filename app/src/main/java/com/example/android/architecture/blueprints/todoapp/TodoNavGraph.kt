@@ -17,6 +17,7 @@
 package com.example.android.architecture.blueprints.todoapp
 
 import android.app.Activity
+import android.content.Context
 import androidx.compose.material.DrawerState
 import androidx.compose.material.DrawerValue
 import androidx.compose.material.rememberDrawerState
@@ -45,6 +46,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun TodoNavGraph(
+    context: Context,
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController(),
     coroutineScope: CoroutineScope = rememberCoroutineScope(),
@@ -70,6 +72,7 @@ fun TodoNavGraph(
         ) { entry ->
             AppModalDrawer(drawerState, currentRoute, navActions) {
                 TasksScreen(
+                    context = context,
                     userMessage = entry.arguments?.getInt(USER_MESSAGE_ARG)!!,
                     onUserMessageDisplayed = { entry.arguments?.putInt(USER_MESSAGE_ARG, 0) },
                     onAddTask = { navActions.navigateToAddEditTask(R.string.add_task, null) },

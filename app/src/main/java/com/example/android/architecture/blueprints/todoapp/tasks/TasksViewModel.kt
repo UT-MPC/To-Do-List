@@ -193,7 +193,9 @@ class TasksViewModel @Inject constructor(
 
     lateinit var context: Context
 
-    fun setContext(context: Context) {
+    fun setCContext(context: Context) {
+        // viewModel has its own setContext function
+        // therefore use this name
         this.context = context
     }
     private suspend fun makePOSTRequest(url: String) = suspendCoroutine<JSONObject> { cont ->
