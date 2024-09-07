@@ -16,9 +16,13 @@
 
 package com.example.android.architecture.blueprints.todoapp.tasks
 
+import android.content.Context
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
 import com.example.android.architecture.blueprints.todoapp.ADD_EDIT_RESULT_OK
 import com.example.android.architecture.blueprints.todoapp.DELETE_RESULT_OK
 import com.example.android.architecture.blueprints.todoapp.EDIT_RESULT_OK
@@ -40,6 +44,9 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import org.json.JSONObject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * UiState for the task list screen.
@@ -183,6 +190,37 @@ class TasksViewModel @Inject constructor(
                 )
             }
         }
+
+    lateinit var context: Context
+
+    fun setContext(context: Context) {
+        this.context = context
+    }
+    private suspend fun makePOSTRequest(url: String) = suspendCoroutine<JSONObject> { cont ->
+        /**
+         * This function makes a POST request.
+         * The cURL equivalent is:
+         * curl --location --request POST $url \
+         * --header 'Authorization: Bearer $accessToken'
+         * In this programming task, it is used to get intra day activity from Withings
+         */
+        val queue = Volley.newRequestQueue(context)
+        val jsonObjectRequest = object: JsonObjectRequest(
+                Method.POST, url, null,
+                {response -> // Listener
+                    cont.resume(response)  // returns the response. In this case, its type is a JSONObject
+                },
+                { error -> Log.i("Volley", "Error: $error")}
+        ) {
+            override fun getHeaders(): MutableMap<String, String> {
+                val headers = HashMap<String, String>()
+                headers["Authorization"] = "Bearer"
+                return headers
+            }
+        }
+
+        queue.add(jsonObjectRequest)
+    }
 }
 
 // Used to save the current filtering in SavedStateHandle.
