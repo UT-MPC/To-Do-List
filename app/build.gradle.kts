@@ -111,6 +111,8 @@ android {
  all versions in a single place. This improves readability and helps managing project complexity.
  */
 dependencies {
+    implementation("com.android.volley:volley:1.2.1")
+
 
     // App dependencies
     implementation(libs.androidx.annotation)
