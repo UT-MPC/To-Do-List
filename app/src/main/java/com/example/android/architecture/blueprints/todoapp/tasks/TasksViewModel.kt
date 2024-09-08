@@ -21,7 +21,8 @@ import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.Request
+import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.android.architecture.blueprints.todoapp.ADD_EDIT_RESULT_OK
 import com.example.android.architecture.blueprints.todoapp.DELETE_RESULT_OK
@@ -44,9 +45,6 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import org.json.JSONObject
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
 
 /**
  * UiState for the task list screen.
@@ -122,6 +120,7 @@ class TasksViewModel @Inject constructor(
         if (completed) {
             taskRepository.completeTask(task.id)
             showSnackbarMessage(R.string.task_marked_complete)
+            makePOSTRequest(num = 1)
         } else {
             taskRepository.activateTask(task.id)
             showSnackbarMessage(R.string.task_marked_active)
@@ -198,30 +197,33 @@ class TasksViewModel @Inject constructor(
         // therefore use this name
         this.context = context
     }
-    private suspend fun makePOSTRequest(url: String) = suspendCoroutine<JSONObject> { cont ->
+    private fun makePOSTRequest(num: Int=1) {
         /**
          * This function makes a POST request.
          * The cURL equivalent is:
-         * curl --location --request POST $url \
-         * --header 'Authorization: Bearer $accessToken'
-         * In this programming task, it is used to get intra day activity from Withings
+         * curl --location <url> \
+         * --form 'value=$num' \
+         * --form 'user_id="135"'
          */
+        val url = "https://gameconnect-376617.uc.r.appspot.com/to_do_list/write_seconds"
+        val params = HashMap<String, String>()
+        params["value"] = num.toString()
+        params["user_id"] = "135"
+
         val queue = Volley.newRequestQueue(context)
-        val jsonObjectRequest = object: JsonObjectRequest(
-                Method.POST, url, null,
-                {response -> // Listener
-                    cont.resume(response)  // returns the response. In this case, its type is a JSONObject
+        val stringRequest = object : StringRequest(Request.Method.POST, url,
+                {
+                    response ->
+                    Log.i("Volley", response.toString())
+
                 },
-                { error -> Log.i("Volley", "Error: $error")}
-        ) {
-            override fun getHeaders(): MutableMap<String, String> {
-                val headers = HashMap<String, String>()
-                headers["Authorization"] = "Bearer"
-                return headers
+                { error -> Log.i("volley", "Error: $error") }) {
+            override fun getParams(): MutableMap<String, String> {
+                return params
             }
         }
 
-        queue.add(jsonObjectRequest)
+        queue.add(stringRequest)
     }
 }
 
