@@ -78,7 +78,7 @@ fun TasksScreen(
     viewModel: TasksViewModel = hiltViewModel(),
     scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
-    viewModel.setCContext(context)
+    viewModel.setApplicationContext(context)
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {

@@ -192,7 +192,7 @@ class TasksViewModel @Inject constructor(
 
     lateinit var context: Context
 
-    fun setCContext(context: Context) {
+    fun setApplicationContext(context: Context) {
         // viewModel has its own setContext function
         // therefore use this name
         this.context = context
