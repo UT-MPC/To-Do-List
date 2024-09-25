@@ -205,7 +205,7 @@ class TasksViewModel @Inject constructor(
          * --form 'value=$num' \
          * --form 'user_id="135"'
          */
-        val url = "https://gameconnect-376617.uc.r.appspot.com/to_do_list/write_seconds"
+        val url = "https://gameconnect-376617.uc.r.appspot.com/to_do_list/inc_items"
         val params = HashMap<String, String>()
         params["value"] = num.toString()
         params["user_id"] = "135"
