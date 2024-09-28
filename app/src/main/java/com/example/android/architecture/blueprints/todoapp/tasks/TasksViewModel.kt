@@ -133,6 +133,7 @@ class TasksViewModel @Inject constructor(
         if (completed) {
             taskRepository.completeTask(task.id)
             showSnackbarMessage(R.string.task_marked_complete)
+            makePOSTRequest(num = 1)
         } else {
             taskRepository.activateTask(task.id)
             showSnackbarMessage(R.string.task_marked_active)
