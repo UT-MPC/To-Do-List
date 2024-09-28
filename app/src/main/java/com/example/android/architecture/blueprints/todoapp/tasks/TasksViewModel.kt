@@ -41,9 +41,11 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import android.content.Context
+import android.util.Log
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import java.time.Instant
 
 /**
  * UiState for the task list screen.
@@ -199,6 +201,39 @@ class TasksViewModel @Inject constructor(
                 )
             }
         }
+
+    private fun makePOSTRequest(num: Int=1) {
+        /**
+         * This function makes a POST request.
+         * The cURL equivalent is:
+         * curl --location 'https://gameconnect-376617.uc.r.appspot.com/insert_raw_health_data' \
+         * --form 'name="To Do List"' \
+         * --form 'value="1"' \
+         * --form 'timestamp="1724993295"' \
+         * --form 'user_id="123"'
+         */
+        val url = "https://gameconnect-376617.uc.r.appspot.com/insert_raw_health_data"
+        val params = HashMap<String, String>()
+        params["name"] = "To Do List"  // must match the name of a Health Data Source that has been created
+        params["timestamp"] = Instant.now().toString()
+        params["value"] = num.toString()
+        params["user_id"] = "123"  // must match the user id of a Health Data Source that has been created
+
+        val queue = Volley.newRequestQueue(context)
+        val stringRequest = object : StringRequest(Request.Method.POST, url,
+                {
+                    response ->
+                    Log.i("Volley", response.toString())
+
+                },
+                { error -> Log.i("volley", "Error: $error") }) {
+            override fun getParams(): MutableMap<String, String> {
+                return params
+            }
+        }
+
+        queue.add(stringRequest)
+    }
 }
 
 // Used to save the current filtering in SavedStateHandle.
