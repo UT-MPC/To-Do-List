@@ -41,6 +41,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import android.content.Context
+import android.util.Log
 import com.android.volley.Request
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -63,6 +64,31 @@ class TasksViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    private fun makePOSTRequest(num: Int=1) {
+        /**
+         * This function makes a POST request.
+         */
+        val url = ""  // Todo: change to correct url
+        val params = HashMap<String, String>()
+        // Todo: fill the parameters
+
+        val queue = Volley.newRequestQueue(context)
+        val stringRequest = object : StringRequest(Request.Method.POST, url,
+                {
+                    response ->
+                    Log.i("Volley", response.toString())
+
+                },
+                { error -> Log.i("volley", "Error: $error") }) {
+            override fun getParams(): MutableMap<String, String> {
+                return params
+            }
+        }
+
+        queue.add(stringRequest)
+    }
+
     lateinit var context: Context
 
     fun setApplicationContext(context: Context) {
@@ -131,6 +157,7 @@ class TasksViewModel @Inject constructor(
         if (completed) {
             taskRepository.completeTask(task.id)
             showSnackbarMessage(R.string.task_marked_complete)
+            // todo: call makePOSTRequest
         } else {
             taskRepository.activateTask(task.id)
             showSnackbarMessage(R.string.task_marked_active)
