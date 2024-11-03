@@ -112,6 +112,8 @@ android {
  */
 dependencies {
 
+    implementation("com.android.volley:volley:1.2.1")
+
     // App dependencies
     implementation(libs.androidx.annotation)
     implementation(libs.kotlinx.coroutines.android)
