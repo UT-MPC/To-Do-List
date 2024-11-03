@@ -63,10 +63,12 @@ import com.example.android.architecture.blueprints.todoapp.tasks.TasksFilterType
 import com.example.android.architecture.blueprints.todoapp.util.LoadingContent
 import com.example.android.architecture.blueprints.todoapp.util.TasksTopAppBar
 import com.google.accompanist.appcompattheme.AppCompatTheme
+import android.content.Context
 
 @OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
 fun TasksScreen(
+    context: Context,
     @StringRes userMessage: Int,
     onAddTask: () -> Unit,
     onTaskClick: (Task) -> Unit,
@@ -76,6 +78,7 @@ fun TasksScreen(
     viewModel: TasksViewModel = hiltViewModel(),
     scaffoldState: ScaffoldState = rememberScaffoldState()
 ) {
+    viewModel.setApplicationContext(context)
     Scaffold(
         scaffoldState = scaffoldState,
         topBar = {
