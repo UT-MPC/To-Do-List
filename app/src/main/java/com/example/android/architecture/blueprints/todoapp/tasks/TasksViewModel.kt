@@ -40,6 +40,10 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import android.content.Context
+import com.android.volley.Request
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 
 /**
  * UiState for the task list screen.
@@ -59,6 +63,18 @@ class TasksViewModel @Inject constructor(
     private val taskRepository: TaskRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+    lateinit var context: Context
+
+    fun setApplicationContext(context: Context) {
+        /**
+         * sets this.context to the context that is passed in
+         * in this case, it will be the application context,
+         * which is a global context that represents the entire application.
+         * This context provides access to resources that Volley needs
+         * in order to make network calls.
+         */
+        this.context = context
+    }
 
     private val _savedFilterType =
         savedStateHandle.getStateFlow(TASKS_FILTER_SAVED_STATE_KEY, ALL_TASKS)
